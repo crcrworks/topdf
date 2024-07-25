@@ -69,7 +69,7 @@ impl Input {
 
 impl App {
     pub fn render_input_name(&mut self, f: &mut Frame, area: Rect) {
-        let input_area = App::centered_rect(30, 4, area);
+        let input_area = App::centered_rect(30, 8, area);
 
         let input = Paragraph::new(self.input.value.as_str()).block(
             Block::bordered()
