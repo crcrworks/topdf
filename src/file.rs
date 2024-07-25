@@ -50,7 +50,6 @@ impl FileList {
                 if path.is_dir() {
                     self.load_files_recursive(&path, extensions)?;
                 } else if path.is_file() {
-                    // Check if the file has one of the specified extensions
                     if let Some(ext) = path.extension() {
                         if extensions.contains(&ext.to_str().unwrap()) {
                             self.items.push(FileItem {
@@ -62,7 +61,6 @@ impl FileList {
                 }
             }
         } else if path.is_file() {
-            // Check if the file has one of the specified extensions
             if let Some(ext) = path.extension() {
                 if extensions.contains(&ext.to_str().unwrap()) {
                     self.items.push(FileItem {
