@@ -1,0 +1,11 @@
+[package]
+name = "topdf"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+color-eyre = "0.6.3"
+crossterm = "0.27.0"
+image = "0.25.2"
+printpdf = "0.7.0"
+ratatui = "0.27.0"
