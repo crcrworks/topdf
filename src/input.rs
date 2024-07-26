@@ -9,33 +9,36 @@ impl App {
         if key.kind != KeyEventKind::Press {
             return;
         }
+
         match key.code {
             KeyCode::Char('q') | KeyCode::Esc => self.back(),
-            KeyCode::Char('j') => self.select_next(),
-            KeyCode::Char('k') => self.select_previous(),
-            KeyCode::Char('g') | KeyCode::Home => self.select_first(),
-            KeyCode::Char('G') | KeyCode::End => self.select_last(),
-            KeyCode::Char('l') | KeyCode::Right | KeyCode::Char(' ') => {
-                self.toggle_status();
-            }
             KeyCode::Enter => self.confirm(),
             _ => {}
         }
 
-        if let Scene::Name = self.scene {
-            match key.code {
+        match self.scene {
+            Scene::File => match key.code {
+                KeyCode::Char('j') | KeyCode::Down => self.select_next(),
+                KeyCode::Char('k') | KeyCode::Up => self.select_previous(),
+                KeyCode::Char('g') | KeyCode::Home => self.select_first(),
+                KeyCode::Char('G') | KeyCode::End => self.select_last(),
+                KeyCode::Char('l') | KeyCode::Right | KeyCode::Char(' ') => self.toggle_status(),
+                _ => {}
+            },
+            Scene::PageFormat => match key.code {
+                KeyCode::Char('j') | KeyCode::Down => self.select_next(),
+                KeyCode::Char('k') | KeyCode::Up => self.select_previous(),
+                KeyCode::Char('g') | KeyCode::Home => self.select_first(),
+                KeyCode::Char('G') | KeyCode::End => self.select_last(),
+                _ => {}
+            },
+            Scene::Name => match key.code {
                 KeyCode::Char(c) => self.input.enter_char(c),
                 KeyCode::Backspace => self.input.delete_char(),
                 KeyCode::Left => self.input.move_cursor_left(),
                 KeyCode::Right => self.input.move_cursor_right(),
                 _ => {}
-            }
-        } else {
-            match key.code {
-                KeyCode::Down => self.select_next(),
-                KeyCode::Up => self.select_previous(),
-                _ => {}
-            }
+            },
         }
     }
 
