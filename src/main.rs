@@ -72,7 +72,7 @@ pub enum Scene {
 impl FromIterator<SizeOption> for SizeOptionList {
     fn from_iter<I: IntoIterator<Item = SizeOption>>(iter: I) -> Self {
         let options = iter.into_iter().map(SizeOption::new).collect();
-        let state = ListState::default();
+        let state = ListState::default().with_selected(Some(0));
         Self { options, state }
     }
 }
@@ -87,7 +87,7 @@ impl Default for App {
             file_list: FileList {
                 root_dir: PathBuf::new(),
                 items: vec![],
-                state: ListState::default(),
+                state: ListState::default().with_selected(Some(0)),
             },
             size_option_list: SizeOptionList::from_iter([
                 SizeOption {

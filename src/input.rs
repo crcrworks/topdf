@@ -86,6 +86,9 @@ impl App {
             Scene::File => self.scene = Scene::PageFormat,
             Scene::PageFormat => self.scene = Scene::Name,
             Scene::Name => {
+                if self.input.value.is_empty() {
+                    return;
+                }
                 let index: usize = self.size_option_list.state.selected().unwrap_or_default();
                 let selected_option = &self.size_option_list.options[index];
                 let result = self.file_list.convert_to_pdf(
