@@ -7,13 +7,13 @@ edition = "2021"
 description = "Convert png, jpg, or jpeg to one PDF"
 
 documentation = "https://docs.rs/topdf"
-homepage = "https://crates.op/crates/topdf"
+homepage = "https://crates.io/crates/topdf"
 repository = "https://github.com/crcrworks/topdf"
 
 readme = "README.md"
 
-keywords = ["topdf", "convert", "generate", "png", "jpg", "jpeg", "pdf"]
-categories = ["Parsing tools"]
+keywords = ["pdf", "convert", "generate"]
+categories = ["parsing"]
 
 license = "MIT"
 
