@@ -1,7 +1,21 @@
 [package]
 name = "topdf"
 version = "0.1.0"
+authors = ["crcrworks <crcr.works@gmail.com>"]
 edition = "2021"
+
+description = "Convert png, jpg, or jpeg to one PDF"
+
+documentation = "https://docs.rs/topdf"
+homepage = "https://crates.op/crates/topdf"
+repository = "https://github.com/crcrworks/topdf"
+
+readme = "README.md"
+
+keywords = ["topdf", "convert", "generate", "png", "jpg", "jpeg", "pdf"]
+categories = ["Parsing tools"]
+
+license = "MIT"
 
 [dependencies]
 color-eyre = "0.6.3"
