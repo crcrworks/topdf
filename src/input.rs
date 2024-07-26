@@ -83,15 +83,19 @@ impl App {
             Scene::File => self.scene = Scene::PageFormat,
             Scene::PageFormat => self.scene = Scene::Name,
             Scene::Name => {
-                let index: usize = self.size_option_list.state.selected().unwrap();
+                let index: usize = self.size_option_list.state.selected().unwrap_or_default();
                 let selected_option = &self.size_option_list.options[index];
-                self.file_list
-                    .convert_to_pdf(
-                        selected_option.width,
-                        selected_option.height,
-                        &self.input.value,
-                    )
-                    .unwrap();
+                let result = self.file_list.convert_to_pdf(
+                    selected_option.width,
+                    selected_option.height,
+                    &self.input.value,
+                );
+                match result {
+                    Ok(_) => {}
+                    Err(e) => {
+                        eprintln!("Failed to convert PDF - {}", e);
+                    }
+                }
                 self.should_exit = true;
                 self.exit_message = format!(
                     "PDF Saved! path: {}.pdf",

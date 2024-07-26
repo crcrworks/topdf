@@ -7,6 +7,7 @@ use printpdf::{ColorBits, ColorSpace, Image, ImageTransform, ImageXObject, Mm, P
 use ratatui::widgets::ListState;
 use std::{
     convert::From,
+    error,
     fs::{self, File},
     io::BufWriter,
     path::{Path, PathBuf},
@@ -51,22 +52,39 @@ impl FileList {
                     self.load_files_recursive(&path, extensions)?;
                 } else if path.is_file() {
                     if let Some(ext) = path.extension() {
-                        if extensions.contains(&ext.to_str().unwrap()) {
-                            self.items.push(FileItem {
-                                path,
-                                status: Status::Unchecked,
-                            })
+                        match ext.to_str() {
+                            Some(ext_str) => {
+                                if extensions.contains(&ext_str) {
+                                    self.items.push(FileItem {
+                                        path,
+                                        status: Status::Unchecked,
+                                    })
+                                }
+                            }
+                            None => {
+                                eprintln!(
+                                    "Failed to convert extension to str for file: {:?}",
+                                    path
+                                );
+                            }
                         }
                     }
                 }
             }
         } else if path.is_file() {
             if let Some(ext) = path.extension() {
-                if extensions.contains(&ext.to_str().unwrap()) {
-                    self.items.push(FileItem {
-                        path: path.to_path_buf(),
-                        status: Status::Unchecked,
-                    });
+                match ext.to_str() {
+                    Some(ext_str) => {
+                        if extensions.contains(&ext_str) {
+                            self.items.push(FileItem {
+                                path: path.to_path_buf(),
+                                status: Status::Unchecked,
+                            });
+                        }
+                    }
+                    None => {
+                        eprintln!("Failed to convert extension to str for file: {:?}", path);
+                    }
                 }
             }
         }
@@ -78,7 +96,7 @@ impl FileList {
         size_width: MM,
         size_height: MM,
         output_name: &str,
-    ) -> std::io::Result<()> {
+    ) -> Result<(), Box<dyn error::Error>> {
         let (doc, first_page, first_layer) =
             PdfDocument::new("PDF_Document_title", Mm(210.0), Mm(297.0), "Layer");
 
@@ -97,7 +115,14 @@ impl FileList {
                 continue;
             }
 
-            let image = image::open(item.path.clone()).unwrap();
+            let image = match image::open(item.path.clone()) {
+                Ok(image) => image,
+                Err(e) => {
+                    eprintln!("Failed to open image: {:?} - {}", item.path, e);
+                    continue;
+                }
+            };
+
             let (width, height) = image.dimensions();
 
             let current_layer = if index == 0 {
@@ -151,8 +176,7 @@ impl FileList {
 
         let output_path = self.root_dir.join(format!("{}.pdf", output_name));
 
-        doc.save(&mut BufWriter::new(File::create(output_path)?))
-            .unwrap();
+        doc.save(&mut BufWriter::new(File::create(output_path)?))?;
         Ok(())
     }
 
